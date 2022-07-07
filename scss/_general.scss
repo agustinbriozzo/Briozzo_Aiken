@@ -1,0 +1,144 @@
+// EMPIEZAN ESTILOS GENERALES DE LA PAGINA
+*{
+    font-family: 'Raleway' , sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+h1,h2,h3,p{
+    font-family: $fuente1;
+    color: $black;
+}
+h2{
+    font-size: $titulo2;
+}
+p{
+    font-size: $parrafo;
+}
+.container-fluid{
+    padding: 0px;
+}
+.navbar{
+    img{
+        padding-left: 15px;
+    }
+        ul{
+            padding-right: 15px;
+            li{
+                a{
+                    color: $black;
+                    font-size: $navegacion;
+                }
+            }
+        }
+}
+.navbar{
+    li{
+        a{
+            background-image: linear-gradient(currentColor, currentColor);
+            background-position: 0% 100%;
+            background-repeat: no-repeat;
+            background-size: 0% 2px;
+            transition: background-size .7s;
+            &:hover{
+                color: $black;
+                background-size: 100% 3px;
+            }
+        }
+    }
+}
+footer{
+    svg{
+        color: $black;
+    }
+}
+.bg-color1{
+    background-color: $yellow;
+}
+.bg-color2{
+    background-color: $lightyellow;
+}
+// TERMINAN LOS ESTILOS GENERALES DE LA PAGINA
+
+// EMPIEZA INDEX
+.descripcion-index{
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.index-wh{
+    width: 100%;
+    height: 700px;
+}
+.index-carousel{
+    width: 100%;
+    height: 700px;
+}
+.ubicacion{
+    display: flex;
+    justify-content: center;
+    min-height: 100%;
+}
+.titulo-ubicacion{
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+// TERMINA INDEX
+
+// EMPIEZA NOSOTROS
+.about{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    min-height: 100vh;
+}
+// TERMINA NOSOTROS
+
+// EMPIEZA HABITACIONES
+.descripcion-room{
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.room-wh{
+    width: 100%;
+    height: 700px;
+}
+.room-carousel{
+    width: 100%;
+    height: 700px;
+}
+.titulo-room{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+// TERMINA HABITACIONES
+
+// EMPIEZA GALERIA
+.gallery{
+    img{
+        width: 100%;
+        &:hover{
+            border: 5px solid $yellow;
+        }
+    }
+}
+.gallery{
+    .col-lg-4{
+        margin: 0;
+        padding: 15px;
+    }
+}
+// TERMINA GALERIA
+
+// EMPIEZA CONTACTO
+.formulario{
+    min-height: 100vh;
+}
+// TERMINA CONTACTO
+
+
+
+
+
