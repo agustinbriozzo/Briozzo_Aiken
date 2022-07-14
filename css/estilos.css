@@ -5,21 +5,22 @@
   margin: 0;
   box-sizing: border-box; }
 
-h1, h2, h3, p {
-  font-family: "Raleway", sans-serif;
-  color: #494738; }
-
-h2 {
-  font-size: 45px; }
-
-p {
-  font-size: 19px; }
-
+/* h1,h2,h3,p{
+    font-family: $fuente1;
+    color: $black;
+}
+h2{
+    font-size: $titulo2;
+}
+p{
+    font-size: $parrafo;
+} */
 .container-fluid {
   padding: 0px; }
 
 .navbar img {
-  padding-left: 15px; }
+  padding-left: 15px;
+  width: 248px; }
 
 .navbar ul {
   padding-right: 15px; }
@@ -39,6 +40,12 @@ p {
 
 footer svg {
   color: #494738; }
+
+.bg-principal {
+  background-image: radial-gradient(circle, #fcfaea, #fbf9e4, #faf7de, #f9f6d9, #f8f4d3, #f3efce, #eeebca, #e9e6c5, #dfddc0, #d6d4bc, #cccbb7, #c3c2b2); }
+
+.bg-right {
+  background-image: linear-gradient(to right, #fcfaea, #fbf9e4, #faf7de, #f9f6d9, #f8f4d3, #f3efce, #eeebca, #e9e6c5, #dfddc0, #d6d4bc, #cccbb7, #c3c2b2); }
 
 .bg-color1 {
   background-color: #f6f2cb; }
@@ -71,8 +78,20 @@ footer svg {
 
 .about {
   margin-top: 25px;
-  margin-bottom: 25px;
-  min-height: 100vh; }
+  margin-bottom: 25px; }
+  .about .card {
+    border: none;
+    margin: 10px; }
+  .about .services .row {
+    padding: 10px; }
+
+.container-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; }
+  .container-icon img {
+    color: #494738; }
 
 .descripcion-room {
   text-align: center;
@@ -103,3 +122,26 @@ footer svg {
 
 .formulario {
   min-height: 100vh; }
+
+.btn-send, .btn-delete {
+  border: none;
+  background-color: blue;
+  color: white;
+  width: 100px;
+  height: 40px;
+  margin-left: 10px; }
+
+.btn-delete {
+  background-color: red;
+  margin-left: 0px; }
+
+h2 {
+  font-size: 45px;
+  color: #494738; }
+
+p {
+  font-size: 19px;
+  color: #494738; }
+
+.navbar-toggler {
+  background-color: #494738; }
