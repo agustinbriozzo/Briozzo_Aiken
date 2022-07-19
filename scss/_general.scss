@@ -5,17 +5,19 @@
     margin: 0;
     box-sizing: border-box;
 }
-// comente esto para poder usarlo con mixins
-/* h1,h2,h3,p{
+h1,h2,h3,p{
     font-family: $fuente1;
     color: $black;
+}
+h1{
+    // font-size: ;
 }
 h2{
     font-size: $titulo2;
 }
 p{
     font-size: $parrafo;
-} */
+}
 .container-fluid{
     padding: 0px;
 }
@@ -76,11 +78,10 @@ footer{
 }
 .index-wh{
     width: 100%;
-    height: 700px;
 }
 .index-carousel{
     width: 100%;
-    height: 700px;
+
 }
 .ubicacion{
     display: flex;
@@ -98,7 +99,6 @@ footer{
 .about{
     margin-top: 25px;
     margin-bottom: 25px;
-    // min-height: 100vh;
     .card{
         border: none;
         margin: 10px;
@@ -130,11 +130,9 @@ footer{
 }
 .room-wh{
     width: 100%;
-    height: 700px;
 }
 .room-carousel{
     width: 100%;
-    height: 700px;
 }
 .titulo-room{
     text-align: center;
@@ -162,6 +160,9 @@ footer{
 
 // EMPIEZA CONTACTO
 .formulario{
+    padding: 20px;
+    margin: 0 auto;
+    width: 50%;
     min-height: 100vh;
 }
 // TERMINA CONTACTO
