@@ -141,7 +141,9 @@ footer .menu {
 .descripcion-index {
   text-align: center;
   padding-top: 20px;
-  padding-bottom: 20px; }
+  padding-bottom: 20px;
+  padding-left: 7px;
+  padding-right: 7px; }
 
 .index-wh {
   width: 100%; }
@@ -182,19 +184,17 @@ footer .menu {
 
 .descripcion-room {
   text-align: center;
-  padding-top: 20px;
-  padding-bottom: 20px; }
-
-.room-wh {
-  width: 100%; }
-
-.room-carousel {
-  width: 100%; }
+  padding-left: 20px;
+  padding-right: 20px; }
 
 .titulo-room {
   text-align: center;
-  padding-top: 10px;
-  padding-bottom: 10px; }
+  padding-top: 10px; }
+
+.imagenes-room img {
+  padding-bottom: 15px;
+  padding-left: 20px;
+  padding-right: 20px; }
 
 .gallery img {
   width: 100%; }
