@@ -22,11 +22,47 @@ const realizarCotizacion = ()=> {
     if(chequeoform()){
         const habitacion = new cotizacion(tipo.value, dias.value)
             total.innerText = habitacion.cotizar()
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                    confirmButton: 'btn-send',
+                    cancelButton: 'btn-delete'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Esta seguro de realizar la reserva?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Su reserva fue realizada con éxito',
+                            showConfirmButton: false,
+                            timer: 3000
+                            })
+                    } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Su reserva fue cancelada',
+                            showConfirmButton: false,
+                            timer: 3000
+                            })
+                    }
+                })
     }else{
         alert("Completa los datos correctamente")
     }
 }
-
 
 const enviarDatos = ()=> {
     const cotizacion = {
