@@ -270,6 +270,34 @@ footer .menu {
 .form-input:not(:placeholder-shown) ~ .form-line {
   transform: scale(1); }
 
+.containerReserva {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 20px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+/* .reserva{
+    border: solid 1px $black;
+} */
+table {
+  border: solid 1px #494738;
+  table-layout: fixed;
+  border-collapse: collapse; }
+
+thead {
+  background: #f6f2cb; }
+
+th {
+  padding: 20px 15px;
+  font-weight: 700;
+  text-transform: uppercase; }
+
+td {
+  padding: 15px;
+  border-bottom: solid 1px #494738; }
+
 .btn-send, .btn-delete {
   border: none;
   border-radius: 5px;
