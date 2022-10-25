@@ -1,7 +1,7 @@
+// DECLARO MIS CONSTANTES
 const nombre = document.querySelector("#nombre")
 const apellido = document.querySelector("#apellido")
 const email = document.querySelector("#email")
-const mensaje = document.querySelector("#mensaje")
 const tipo = document.querySelector("#tipo")
 const descripcion = document.querySelector("#descripcion")
 const llegada = document.querySelector("#llegada")
@@ -11,6 +11,9 @@ const btnCotizar = document.querySelector("#btnCotizar")
 const btnReservar = document.querySelector("#btnReservar")
 const btnEnviar = document.querySelector("#btnEnviar")
 const total = document.querySelector("span.precioTotal")
+const btnPagar = document.querySelector("#btnPagar")
+const btnCancelar = document.querySelector("#btnCancelar")
+
 
 
 const habitaciones =
@@ -35,34 +38,42 @@ const habitaciones =
     }
 ]
 
-// cargo las opciones del select
+// CARGO LAS OPCIONES DEL SELECT
 const opciones = (select, array)=> {
     if(array.length > 0){
         array.forEach(elemento => {
             select.innerHTML += `<option class="option" id="${elemento.id} "value="${elemento.precio}">${elemento.descripcion}</option>`
         })
-    } else{
-        console.error("no existen elementos en el array")
     }
 }
 opciones(descripcion,habitaciones)
 
-// datos para usar libreria luxon
+// DATOS PARA USAR LIBRERIA LUXON
 const DateTime = luxon.DateTime
 const fecha = {day: 8, month: 12, year: 2022}
 const zona = {zone: 'America/Buenos_Aires', numberingSystem: 'latn'}
 const dt = DateTime.fromObject(fecha, zona)
 
-// calculo cantidad de dias
+// CALCULO CANTIDAD DE DIAS
 const cantidadDias = ()=>{
     const DT = luxon.DateTime
-    let inicial = DT.fromISO(llegada.value);
-    let final = DT.fromISO(salida.value);
-    let dias = final.diff(inicial, ['days']).toObject()
-    return dias
+    const inicial = DT.fromISO(llegada.value);
+    const final = DT.fromISO(salida.value);
+    if(inicial >= final){
+        return false
+    } else if(llegada.value === "" || salida.value === ""){
+        return false
+    } else if(llegada.value === "" && salida.value === ""){
+        return false
+    } else{
+        let dias = final.diff(inicial, ['days']).toObject()
+        return dias
+    }
 }
 
-// calculo el precio total de la estadia
+
+
+// CALCULO EL PRECIO TOTAL DE LA ESTADIA
 const estadia = ()=>{
     let eleccion = descripcion.value
     let totalPago = cantidadDias().days * eleccion
@@ -70,22 +81,24 @@ const estadia = ()=>{
 }
 
 
-// obtengo la opcion del select y la guardo en reserva[]
-const obtenerOption = ()=> {
-    let options = document.querySelectorAll(".option")
+let reserva = false
+
+// OBTENGO LA OPCION DEL SELECT Y LA GUARDO EN RESERVA
+const obtenerOption = ()=>{
+    const options = document.querySelectorAll(".option")
     for(const option of options){
-        option.addEventListener("click", ()=> {
-            const room = habitaciones.find(habitacion => habitacion.id == option.id)
-            if(room){
-                reserva.length = 0
-                reserva.push(room)
-            }
+        option.addEventListener("click", ()=>{
+            habitaciones.find((habitacion) =>{
+                if(habitacion.id == option.id){
+                    reserva = habitacion
+                }
+            })
         })
     }
 }
 obtenerOption()
 
-// no tiene mucho sentido, la use para tener una clase en el proyecto
+// AGREGO UNA CLASE PARA USARLA EN LA COTIZACION
 class cotizacion {
     constructor(precio){
         this.precio = parseInt(precio)
@@ -98,33 +111,48 @@ class cotizacion {
 
 
 const realizarCotizacion = ()=> {
-    btnCotizar.innerText = "cotizando..."
-    setTimeout(() => {
-        const habitacion = new cotizacion(descripcion.value)
-        total.innerText = habitacion.cotizar()
-        btnCotizar.innerText = "Cotizar"
-    }, 2000);
-}
-
-
-const reserva = []
-
-// funcion para obtener que tipo de habitacion se esta reservando, simple/doble/triple
-const obtenerTipo = (reserva)=> {
-    for(const habitacion of reserva){
-        return habitacion.tipo
+    if(reserva && cantidadDias() != false){
+        setTimeout(() => {
+            const habitacion = new cotizacion(descripcion.value)
+            total.innerText = habitacion.cotizar()
+            btnCotizar.innerText = "Cotizar"
+        }, 1000);
+    } else if(cantidadDias() === false){
+        alert("Ingrese las fechas correctamente")
+    } else if(reserva == false){
+        alert("Seleccione la habitacion a reservar")
     }
 }
 
-// esta es la funcion que me esta causando problemas
-// antes tenia en vez del if(reserva), for(const habitacion of reserva){}, y en el primer td, en vez de obtenerTipo(), tenia habitacion.tipo
-//fijate que si lo probas de esa manera y llamas a la funcion desde la consola, obviamente antes habiendo seleccionado el tipo de habitacion, se carga una reserva debajo del formulario con los datos que yo quiero reflejar
 
-const cargarReserva = (reserva)=> {
+// FUNCION PARA OBTENER EL TIPO DE HABITACION QUE SE ESTA RESERVANDO
+const obtenerTipo = ()=> {
+    if(reserva){
+        return reserva.tipo
+    }
+}
+
+
+
+// FUNCION PARA CARGAR LA RESERVA DINAMICAMENTE
+const cargarReserva = ()=> {
+    const reservaAnterior = document.querySelector(".reserva")
+    if(reservaAnterior){
+        reservaAnterior.remove()
+    }
     let containerReserva = document.querySelector(".containerReserva")
     let div = document.createElement("div")
     div.setAttribute("class", "reserva")
-    if(reserva){
+    if(reserva && cantidadDias() != false){
+        const datosReserva = {
+            nombre: nombre.value,
+            apellido: apellido.value,
+            email: email.value,
+            habitacion: obtenerTipo(),
+            dias: cantidadDias().days,
+            precio: estadia() 
+        }
+        localStorage.setItem('datosReserva', JSON.stringify(datosReserva))
         div.innerHTML += `
         <div>
             <h4 class="text-center">MI RESERVA:</h4>
@@ -143,32 +171,113 @@ const cargarReserva = (reserva)=> {
                         <td>${obtenerTipo()}</td>
                         <td>${cantidadDias().days}</td>
                         <td>${estadia()}</td>
-                        <td><button class="btn-send">Pagar</button></td>
-                        <td><button class="btn-delete">Cancelar</button></td>
+                        <td><button type="button" class=" btn-send btn btn-primary" id="btnPagar">Pagar</button></td>
+                        <td><button type="button" class=" btn-delete btn btn-primary" id="btnCancelar">Cancelar</button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         `
+    } else if(cantidadDias() === false){
+        alert("Ingrese las fechas correctamente")
+    } else if(reserva == false){
+        alert("Seleccione la habitacion a reservar")
     }
     containerReserva.appendChild(div)
+    
 }
 
 
 
-const enviarDatos = ()=> {
-    const cotizacion = {
-        nombre: nombre[nombre.selectedIndex].text,
-        apellido: apellido[apellido.selectedIndex].text,
-        email: email[email.selectedIndex].text,
-        mensaje: mensaje[mensaje.selectedIndex].text,
-        total: total.innerText
+// BORRO LOCALSTORAGE
+const borrarLocal = () => {
+    if(localStorage.getItem("datosReserva")){
+        localStorage.clear()
     }
-    localStorage.setItem("Reserva realizada", JSON.stringify(cotizacion))
-    alert("Muchas gracias por elegir nuestro hotel")
 }
 
 
+// FUNCION PARA PAGAR LA RESERVA
+const pagarReserva = () => {
+    if(reserva){
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                borrarLocal()
+                reserva = {}
+                let miReserva = document.querySelector(".reserva")
+                miReserva.remove()
+                document.querySelector("#llegada").value = ""
+                document.querySelector("#salida").value = ""
+                document.querySelector("#descripcion").value = ""
+                swalWithBootstrapButtons.fire(
+                'Confirmado!',
+                'Su pago ha sido realizado con exito',
+                'success'
+            )
+            } else if (
+              /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+            ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado',
+                'Su pago ha sido cancelado',
+                'error'
+            )
+            }
+        })
+    } else{
+        alert("Usted no tiene ninguna reserva realizada")
+    }
+}
+
+
+// FUNCION PARA BORRAR LA RESERVA
+const borrarReserva = () => {
+    if(reserva){
+        Swal.fire({
+            title: 'Esta seguro que desea cancelar su reserva?',
+            text: "Este cambio no se podra revertir",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Cancelar reserva',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                borrarLocal()
+                reserva = {}
+                let miReserva = document.querySelector(".reserva")
+                miReserva.remove()
+                document.querySelector("#llegada").value = ""
+                document.querySelector("#salida").value = ""
+                document.querySelector("#descripcion").value = ""
+                Swal.fire(
+                'Cancelada!',
+                'Su reserva ha sido cancelada.',
+                'error'
+            )
+            }
+        })
+    } else{
+        alert("Usted no tiene niguna reserva realizada")
+    }
+}
 
 // CODIGO CON FETCH PARA LA CARGA DE COMENTARIOS
 const comments = document.querySelector(".containerComments")
@@ -210,9 +319,8 @@ const cargarComentarios = async ()=> {
 cargarComentarios()
 
 
-
+// EVENTOS
 btnCotizar.addEventListener("click", realizarCotizacion)
 btnReservar.addEventListener("click", cargarReserva)
-
-
-
+btnPagar.addEventListener("click", pagarReserva)
+btnCancelar.addEventListener("click", borrarReserva)
