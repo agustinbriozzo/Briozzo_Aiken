@@ -109,18 +109,43 @@ class cotizacion {
     }
 }
 
+// CONFIGURO ALGUNAS ALERTAS
+const alertaFechas = ()=> {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Ingrese las fechas correctamente'
+    })
+}
+
+const alertaHabitacion = ()=> {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Seleccione la habitacion que desea reservar'
+    })
+}
+
+const alertaReserva = ()=> {
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Se ha guardado su reserva en MI RESERVA',
+        showConfirmButton: false,
+        timer: 1500
+    })
+}
+
 
 const realizarCotizacion = ()=> {
     if(reserva && cantidadDias() != false){
-        setTimeout(() => {
-            const habitacion = new cotizacion(descripcion.value)
-            total.innerText = habitacion.cotizar()
-            btnCotizar.innerText = "Cotizar"
-        }, 1000);
+        const habitacion = new cotizacion(descripcion.value)
+        total.innerText = habitacion.cotizar()
+        btnCotizar.innerText = "Cotizar"
     } else if(cantidadDias() === false){
-        alert("Ingrese las fechas correctamente")
+        alertaFechas()
     } else if(reserva == false){
-        alert("Seleccione la habitacion a reservar")
+        alertaHabitacion()
     }
 }
 
@@ -140,6 +165,7 @@ const cargarReserva = ()=> {
     if(reservaAnterior){
         reservaAnterior.remove()
     }
+    alertaReserva()
     let containerReserva = document.querySelector(".containerReserva")
     let div = document.createElement("div")
     div.setAttribute("class", "reserva")
@@ -171,17 +197,17 @@ const cargarReserva = ()=> {
                         <td>${obtenerTipo()}</td>
                         <td>${cantidadDias().days}</td>
                         <td>${estadia()}</td>
-                        <td><button type="button" class=" btn-send btn btn-primary" id="btnPagar">Pagar</button></td>
-                        <td><button type="button" class=" btn-delete btn btn-primary" id="btnCancelar">Cancelar</button></td>
+                        <td><button type="button" onclick="pagarReserva()" class=" btn-send btn btn-primary" id="btnPagar">Pagar</button></td>
+                        <td><button type="button" onclick="borrarReserva()" class=" btn-delete btn btn-primary" id="btnCancelar">Cancelar</button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         `
     } else if(cantidadDias() === false){
-        alert("Ingrese las fechas correctamente")
+        alertaFechas()
     } else if(reserva == false){
-        alert("Seleccione la habitacion a reservar")
+        alertaHabitacion()
     }
     containerReserva.appendChild(div)
     
@@ -202,18 +228,18 @@ const pagarReserva = () => {
     if(reserva){
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
+            confirmButton: 'btn btn-send',
+            cancelButton: 'btn btn-delete'
             },
             buttonsStyling: false
         })
         swalWithBootstrapButtons.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
+            title: 'Esta seguro de confirmar su pago?',
+            text: "Este cambio no se podra revertir",
+            icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Confirmar pago',
+            cancelButtonText: 'Cancelar pago',
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -249,15 +275,21 @@ const pagarReserva = () => {
 // FUNCION PARA BORRAR LA RESERVA
 const borrarReserva = () => {
     if(reserva){
-        Swal.fire({
-            title: 'Esta seguro que desea cancelar su reserva?',
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+            confirmButton: 'btn btn-send',
+            cancelButton: 'btn btn-delete'
+            },
+            buttonsStyling: false
+        })
+        swalWithBootstrapButtons.fire({
+            title: 'Esta seguro de que desea cancelar su reserva?',
             text: "Este cambio no se podra revertir",
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
             confirmButtonText: 'Cancelar reserva',
-            cancelButtonText: 'Cancelar'
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 borrarLocal()
@@ -267,15 +299,22 @@ const borrarReserva = () => {
                 document.querySelector("#llegada").value = ""
                 document.querySelector("#salida").value = ""
                 document.querySelector("#descripcion").value = ""
-                Swal.fire(
+                swalWithBootstrapButtons.fire(
                 'Cancelada!',
-                'Su reserva ha sido cancelada.',
+                'Su reserva ha sido cancelada',
                 'error'
+            )
+            } else if (
+              /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+            ) {
+            swalWithBootstrapButtons.fire(
+                'Confirmado',
+                'Su reserva no ha sido cancelada',
+                'success'
             )
             }
         })
-    } else{
-        alert("Usted no tiene niguna reserva realizada")
     }
 }
 
@@ -322,5 +361,3 @@ cargarComentarios()
 // EVENTOS
 btnCotizar.addEventListener("click", realizarCotizacion)
 btnReservar.addEventListener("click", cargarReserva)
-btnPagar.addEventListener("click", pagarReserva)
-btnCancelar.addEventListener("click", borrarReserva)
